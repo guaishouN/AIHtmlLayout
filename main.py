@@ -70,4 +70,10 @@ def request_ai():
 
 
 if __name__ == '__main__':
+    # Import Android-specific permissions if available
+    try:
+        from android.permissions import request_permissions, Permission
+        request_permissions([Permission.INTERNET])
+    except ImportError:
+        pass
     app.run(host="0.0.0.0", port=7749)
