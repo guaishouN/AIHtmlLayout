@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/static/framework7-bundle.min.css" />
+    <script src="/static/framework7-bundle.min.js"></script>
+    <title>Settings</title>
+    <style>
+      body {
+        background-color: rgba(160, 215, 255, 0.78);
+      }
+      .list .item-media img {
+        width: 24px;
+        height: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="view view-main">
+        <div class="page">
+          <!-- Top navbar -->
+          <div class="navbar">
+            <div class="navbar-inner">
+              <div class="title">Settings Gyso</div>
+            </div>
+          </div>
+
+          <!-- Page content -->
+          <div class="page-content">
+            <div class="list media-list">
+              <ul>
+                <li>
+                  <a href="#" class="item-link item-content">
+                    <div class="item-media">
+                      <img src="https://img.icons8.com/material-outlined/24/wifi.png" />
+                    </div>
+                    <div class="item-inner">
+                      <div class="item-title">Wi-Fi</div>
+                      <div class="item-after">Home Wi-Fi</div>
+                    </div>
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="item-link item-content">
+                    <div class="item-media">
+                      <img src="https://img.icons8.com/material-outlined/24/wifi.png" />
+                    </div>
+                    <div class="item-inner">
+                      <div class="item-title">Bluetooth</div>
+                      <div class="item-after">On</div>
+                    </div>
+                  </a>
+                </li>
+                <li>
+                  <div class="item-content">
+                    <div class="item-media">
+                      <img src="https://img.icons8.com/?size=24&id=4922&format=png&color=000000" />
+                    </div>
+                    <div class="item-inner">
+                      <div class="item-title">Dark Mefa</div>
+                      <div class="item-after">
+                        <label class="toggle toggle-init">
+                          <input type="checkbox" />
+                          <span class="toggle-icon"></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <a href="#" class="item-link item-content">
+                    <div class="item-media">
+                      <img src="https://img.icons8.com/material-outlined/24/privacy.png" />
+                    </div>
+                    <div class="item-inner">
+                      <div class="item-title">Privacy</div>
+                    </div>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div class="list inset">
+              <ul>
+                <li>
+                  <a href="#" class="item-link item-content">
+                    <div class="item-inner">
+                      <div class="item-title text-color-red">Reset Settings</div>
+                    </div>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const app = new Framework7({
+        el: '#app',
+      });
+    </script>
+  </body>
+</html>

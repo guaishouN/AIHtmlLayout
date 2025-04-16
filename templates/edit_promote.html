@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>編輯提示語</title>
+    <script src="/static/bootstrap/bootstrap.min.js"></script>
+    <script src="/static/jquery_1.10.2.js"></script>
+        <style>
+        /* 调整输入框的大小 */
+        #userPrompt {
+            width: 400px; /* 宽度 */
+            height: 40px; /* 高度 */
+            font-size: 16px; /* 字体大小 */
+            padding: 10px; /* 内边距 */
+            border: 1px solid #ccc; /* 边框样式 */
+            border-radius: 5px; /* 圆角边框 */
+        }
+
+        /* 调整按钮的样式 */
+        .submitpromot {
+            padding: 10px 20px; /* 内边距 */
+            font-size: 16px; /* 字体大小 */
+            background-color: #007BFF; /* 背景颜色 */
+            color: white; /* 文字颜色 */
+            border: none; /* 无边框 */
+            border-radius: 5px; /* 圆角边框 */
+            cursor: pointer; /* 鼠标悬停时的光标样式 */
+        }
+
+        .submitpromot:hover {
+            background-color: #0056b3; /* 鼠标悬停时的背景颜色 */
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>AI 提示词输入</h1>
+        <label for="userPrompt">请输入提示词:</label>
+        <input type="text" id="userPrompt" placeholder="例如：写一篇关于AI的文章">
+        <button class="submitpromot" id="submitBtn">提交</button>
+    </div>
+</body>
+    <script src="/static/edit.js"></script>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>车载座椅调节</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/framework7@7.0.0/framework7-bundle.min.css">
+  <style>
+    :root {
+      --f7-theme-color: #2c7eff;
+    }
+    body {
+      background-color: #1a1a1a;
+      color: #ffffff;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+    .page-content {
+      display: flex;
+      padding: 0;
+      height: 100%;
+    }
+    .left-menu {
+      width: 30%;
+      background-color: #222222;
+      padding: 20px 0;
+      overflow-y: auto;
+    }
+    .right-content {
+      width: 70%;
+      background-color: #1a1a1a;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .menu-item {
+      padding: 20px 15px;
+      text-align: center;
+      border-left: 4px solid transparent;
+      margin-bottom: 10px;
+      transition: all 0.3s;
+    }
+    .menu-item.active {
+      background-color: #333333;
+      border-left: 4px solid var(--f7-theme-color);
+    }
+    .menu-item i {
+      font-size: 32px;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .seat-controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .control-group {
+      margin: 20px;
+      text-align: center;
+    }
+    .control-title {
+      margin-bottom: 15px;
+      font-size: 18px;
+      color: #cccccc;
+    }
+    .circular-button {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: #333333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px;
+      transition: all 0.2s;
+      border: none;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    }
+    .circular-button:active {
+      background-color: #444444;
+      transform: scale(0.95);
+    }
+    .button-row {
+      display: flex;
+      justify-content: center;
+    }
+    .seat-visual {
+      margin: 30px auto;
+      text-align: center;
+    }
+    .seat-visual img {
+      max-width: 300px;
+      height: auto;
+    }
+    .header {
+      background-color: #222222;
+      padding: 15px 20px;
+      font-size: 24px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="view view-main">
+      <div class="page">
+        <div class="header">座椅调节</div>
+        <div class="page-content">
+          <!-- 左侧菜单 -->
+          <div class="left-menu">
+            <div class="menu-item active">
+              <img src="https://img.icons8.com/fluency/48/car-seat.png" alt="座位调节" width="48" height="48">
+              <div>座位调节</div>
+            </div>
+            <div class="menu-item">
+              <img src="https://img.icons8.com/fluency/48/car-seat-heater.png" alt="加热/通风" width="48" height="48">
+              <div>加热/通风</div>
+            </div>
+            <div class="menu-item">
+              <img src="https://img.icons8.com/fluency/48/massage.png" alt="按摩" width="48" height="48">
+              <div>按摩</div>
+            </div>
+            <div class="menu-item">
+              <img src="https://img.icons8.com/fluency/48/settings.png" alt="设置" width="48" height="48">
+              <div>设置</div>
+            </div>
+            <div class="menu-item">
+              <img src="https://img.icons8.com/fluency/48/save.png" alt="记忆" width="48" height="48">
+              <div>记忆</div>
+            </div>
+          </div>
+          
+          <!-- 右侧内容 -->
+          <div class="right-content">
+            <div class="seat-visual">
+              <img src="https://img.icons8.com/color/240/car-seat.png" alt="座椅示意图">
+            </div>
+            
+            <div class="seat-controls">
+              <!-- 靠背调节 -->
+              <div class="control-group">
+                <div class="control-title">靠背调节</div>
+                <div class="button-row">
+                  <button class="circular-button">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/collapse-arrow.png" alt="前倾" width="30" height="30">
+                  </button>
+                  <button class="circular-button">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/expand-arrow.png" alt="后倾" width="30" height="30">
+                  </button>
+                </div>
+              </div>
+              
+              <!-- 座椅高度 (已互换) -->
+              <div class="control-group">
+                <div class="control-title">座椅高度</div>
+                <div class="button-row">
+                  <button class="circular-button">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/left--v1.png" alt="前移" width="30" height="30">
+                  </button>
+                  <button class="circular-button">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/right--v1.png" alt="后移" width="30" height="30">
+                  </button>
+                </div>
+              </div>
+              
+              <!-- 座椅前后 (已互换) -->
+              <div class="control-group">
+                <div class="control-title">座椅前后</div>
+                <div class="button-row">
+                  <button class="circular-button">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/up--v1.png" alt="升高" width="30" height="30">
+                  </button>
+                  <button class="circular-button">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/down--v1.png" alt="降低" width="30" height="30">
+                  </button>
+                </div>
+              </div>
+              
+              <!-- 腰部支撑 -->
+              <div class="control-group">
+                <div class="control-title">腰部支撑</div>
+                <div class="button-row">
+                  <button class="circular-button">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/plus-math.png" alt="增加" width="30" height="30">
+                  </button>
+                  <button class="circular-button">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/minus-math.png" alt="减少" width="30" height="30">
+                  </button>
+                </div>
+              </div>
+              
+              <!-- 大腿支撑 -->
+              <div class="control-group">
+                <div class="control-title">大腿支撑</div>
+                <div class="button-row">
+                  <button class="circular-button">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/plus-math.png" alt="增加" width="30" height="30">
+                  </button>
+                  <button class="circular-button">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/minus-math.png" alt="减少" width="30" height="30">
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/framework7@7.0.0/framework7-bundle.min.js"></script>
+  <script>
+    var app = new Framework7({
+      root: '#app',
+      theme: 'auto',
+    });
+    
+    document.querySelectorAll('.menu-item').forEach(item => {
+      item.addEventListener('click', function() {
+        document.querySelectorAll('.menu-item').forEach(el => {
+          el.classList.remove('active');
+        });
+        this.classList.add('active');
+      });
+    });
+    
+    document.querySelectorAll('.circular-button').forEach(button => {
+      button.addEventListener('click', function() {
+        // 这里可以添加按钮点击效果
+        this.style.backgroundColor = '#2c7eff';
+        setTimeout(() => {
+          this.style.backgroundColor = '#333333';
+        }, 200);
+      });
+    });
+  </script>
+</body>
+</html>

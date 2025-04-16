@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>车载设置</title>
+  <!-- Framework7 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/framework7/framework7-bundle.min.css">
+  <style>
+    :root {
+      --f7-theme-color: #007aff;
+    }
+    body {
+      font-family: 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background-color: #f0f0f0;
+      color: #333;
+      padding: 0;
+      margin: 0;
+    }
+    .car-settings {
+      padding: 20px;
+    }
+    .settings-title {
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 30px;
+      color: #333;
+    }
+    .circle-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+    .circle-button {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .circle-button:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    }
+    .circle-button img {
+      width: 50px;
+      height: 50px;
+      margin-bottom: 8px;
+    }
+    .circle-button .button-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+    }
+    .settings-panel {
+      display: none;
+      padding: 20px;
+      background: white;
+      border-radius: 15px;
+      margin-top: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .settings-panel.active {
+      display: block;
+    }
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 20px;
+      background: var(--f7-theme-color);
+      color: white;
+      border-radius: 20px;
+      margin-bottom: 15px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .back-button img {
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
+    }
+    .panel-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .setting-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 0;
+      border-bottom: 1px solid #eee;
+    }
+    .setting-item:last-child {
+      border-bottom: none;
+    }
+    .setting-label {
+      font-size: 16px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="view view-main">
+      <div class="page">
+        <div class="car-settings">
+          <h1 class="settings-title">车载设置界面</h1>
+          
+          <div class="circle-buttons" id="mainMenu">
+            <div class="circle-button" onclick="showPanel('wifi')">
+              <img src="https://img.icons8.com/fluency/96/wifi.png" alt="WiFi">
+              <span class="button-label">WiFi</span>
+            </div>
+            <div class="circle-button" onclick="showPanel('bluetooth')">
+              <img src="https://img.icons8.com/fluency/96/bluetooth.png" alt="蓝牙">
+              <span class="button-label">蓝牙</span>
+            </div>
+            <div class="circle-button" onclick="showPanel('display')">
+              <img src="https://img.icons8.com/fluency/96/monitor.png" alt="显示">
+              <span class="button-label">显示</span>
+            </div>
+            <div class="circle-button" onclick="showPanel('sound')">
+              <img src="https://img.icons8.com/fluency/96/speaker.png" alt="声音">
+              <span class="button-label">声音</span>
+            </div>
+            <div class="circle-button" onclick="showPanel('ac')">
+              <img src="https://img.icons8.com/fluency/96/air-conditioner.png" alt="空调">
+              <span class="button-label">空调</span>
+            </div>
+            <div class="circle-button" onclick="showPanel('navigation')">
+              <img src="https://img.icons8.com/fluency/96/map-marker.png" alt="导航">
+              <span class="button-label">导航</span>
+            </div>
+            <div class="circle-button" onclick="showPanel('maintenance')">
+              <img src="https://img.icons8.com/fluency/96/maintenance.png" alt="维护">
+              <span class="button-label">维护</span>
+            </div>
+            <div class="circle-button" onclick="showPanel('about')">
+              <img src="https://img.icons8.com/fluency/96/info.png" alt="关于">
+              <span class="button-label">关于</span>
+            </div>
+          </div>
+          
+          <!-- WiFi 设置面板 -->
+          <div id="wifi-panel" class="settings-panel">
+            <div class="back-button" onclick="hidePanel()">
+              <img src="https://img.icons8.com/material-rounded/24/ffffff/back.png" alt="返回">
+              返回
+            </div>
+            <h2 class="panel-title">WiFi 设置</h2>
+            <div class="list">
+              <div class="item-content">
+                <div class="item-inner">
+                  <div class="setting-item">
+                    <div class="setting-label">WiFi</div>
+                    <label class="toggle toggle-init">
+                      <input type="checkbox" checked>
+                      <span class="toggle-icon"></span>
+                    </label>
+                  </div>
+                  <div class="setting-item">
+                    <div class="setting-label">家庭WiFi</div>
+                    <div>已连接</div>
+                  </div>
+                  <div class="setting-item">
+                    <div class="setting-label">自动连接</div>
+                    <label class="toggle toggle-init">
+                      <input type="checkbox" checked>
+                      <span class="toggle-icon"></span>
+                    </label>
+                  </div>
+                  <div class="setting-item">
+                    <div class="setting-label">扫描网络</div>
+                    <div><i class="f7-icons">arrow_right</i></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 蓝牙设置面板 -->
+          <div id="bluetooth-panel" class="settings-panel">
+            <div class="back-button" onclick="hidePanel()">
+              <img src="https://img.icons8.com/material-rounded/24/ffffff/back.png" alt="返回">
+              返回
+            </div>
+            <h2 class="panel-title">蓝牙设置</h2>
+            <div class="list">
+              <div class="item-content">
+                <div class="item-inner">
+                  <div class="setting-item">
+                    <div class="setting-label">蓝牙</div>
+                    <label class="toggle toggle-init">
+                      <input type="checkbox" checked>
+                      <span class="toggle-icon"></span>
+                    </label>
+                  </div>
+                  <div class="setting-item">
+                    <div class="setting-label">可见性</div>
+                    <label class="toggle toggle-init">
+                      <input type="checkbox">
+                      <span class="toggle-icon"></span>
+                    </label>
+                  </div>
+                  <div class="setting-item">
+                    <div class="setting-label">已配对设备</div>
+                    <div><i class="f7-icons">arrow_right</i></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 显示设置面板 -->
+          <div id="display-panel" class="settings-panel">
+            <div class="back-button" onclick="hidePanel()">
+              <img src="https://img.icons8.com/material-rounded/24/ffffff/back.png" alt="返回">
+              返回
+            </div>
+            <h2 class="panel-title">显示设置</h2>
+            <div class="list">
+              <div class="item-content">
+                <div class="item-inner">
+                  <div class="setting-item">
+                    <div class="setting-label">亮度</div>
+                    <div class="range-slider range-slider-init" data-label="true">
+                      <input type="range" min="0" max="100" value="80" step="1">
+                    </div>
+                  </div>
+                  <div class="setting-item">
+                    <div class="setting-label">自动亮度</div>
+                    <label class="toggle toggle-init">
+                      <input type="checkbox" checked>
+                      <span class="toggle-icon"></span>
+                    </label>
+                  </div>
+                  <div class="setting-item">
+                    <div class="setting-label">夜间模式</div>
+                    <label class="toggle toggle-init">
+                      <input type="checkbox">
+                      <span class="toggle-icon"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 声音设置面板 -->
+          <div id="sound-panel" class="settings-panel">
+            <div class="back-button" onclick="hidePanel()">
+              <img src="https://img.icons8.com/material-rounded/24/ffffff/back.png" alt="返回">
+              返回
+            </div>
+            <h2 class="panel-title">声音设置</h2>
+            <div class="list">
+              <div class="item-content">
+                <div class="item-inner">
+                  <div class="setting-item">
+                    <div class="setting-label">媒体音量</div>
+                    <div class="range-slider range-slider-init" data-label="true">
+                      <input type="range" min="0" max="100" value="65" step="1">
+                    </div>
+                  </div>
+                  <div class="setting-item">
+                    <div class="setting-label">导航音量</div>
+                    <div class="range-slider range-slider-init" data-label="true">
+                      <input type="range" min="0" max="100" value="80" step="1">
+                    </div>
+                  </div>
+                  <div class="setting-item">
+                    <div class="setting-label">静音</div>
+                    <label class="toggle toggle-init">
+                      <input type="checkbox">
+                      <span class="toggle-icon"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 其他面板类似 -->
+          <div id="ac-panel" class="settings-panel">
+            <div class="back-button" onclick="hidePanel()">
+              <img src="https://img.icons8.com/material-rounded/24/ffffff/back.png" alt="返回">
+              返回
+            </div>
+            <h2 class="panel-title">空调设置</h2>
+            <div class="list">
+              <div class="item-content">
+                <div class="item-inner">
+                  <div class="setting-item">
+                    <div class="setting-label">温度</div>
+                    <div>24°C</div>
+                  </div>
+                  <div class="setting-item">
+                    <div class="setting-label">风量</div>
+                    <div class="range-slider range-slider-init" data-label="true">
+                      <input type="range" min="1" max="5" value="3" step="1">
+                    </div>
+                  </div>
+                  <div class="setting-item">
+                    <div class="setting-label">自动模式</div>
+                    <label class="toggle toggle-init">
+                      <input type="checkbox" checked>
+                      <span class="toggle-icon"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="navigation-panel" class="settings-panel">
+            <div class="back-button" onclick="hidePanel()">
+              <img src="https://img.icons8.com/material-rounded/24/ffffff/back.png" alt="返回">
+              返回
+            </div>
+            <h2 class="panel-title">导航设置</h2>
+            <div class="setting-item">
+              <div class="setting-label">默认导航应用</div>
+              <div>高德地图</div>
+            </div>
+            <div class="setting-item">
+              <div class="setting-label">避开高速</div>
+              <label class="toggle toggle-init">
+                <input type="checkbox">
+                <span class="toggle-icon"></span>
+              </label>
+            </div>
+            <div class="setting-item">
+              <div class="setting-label">避开收费</div>
+              <label class="toggle toggle-init">
+                <input type="checkbox" checked>
+                <span class="toggle-icon"></span>
+              </label>
+            </div>
+          </div>
+
+          <div id="maintenance-panel" class="settings-panel">
+            <div class="back-button" onclick="hidePanel()">
+              <img src="https://img.icons8.com/material-rounded/24/ffffff/back.png" alt="返回">
+              返回
+            </div>
+            <h2 class="panel-title">维护信息</h2>
+            <div class="setting-item">
+              <div class="setting-label">下次保养里程</div>
+              <div>5000公里</div>
+            </div>
+            <div class="setting-item">
+              <div class="setting-label">机油状态</div>
+              <div>良好</div>
+            </div>
+            <div class="setting-item">
+              <div class="setting-label">轮胎压力</div>
+              <div>正常</div>
+            </div>
+          </div>
+
+          <div id="about-panel" class="settings-panel">
+            <div class="back-button" onclick="hidePanel()">
+              <img src="https://img.icons8.com/material-rounded/24/ffffff/back.png" alt="返回">
+              返回
+            </div>
+            <h2 class="panel-title">关于系统</h2>
+            <div class="setting-item">
+              <div class="setting-label">系统版本</div>
+              <div>CarOS 2.5.1</div>
+            </div>
+            <div class="setting-item">
+              <div class="setting-label">软件更新</div>
+              <div>已是最新版本</div>
+            </div>
+            <div class="setting-item">
+              <div class="setting-label">车辆识别码</div>
+              <div>WDDGF8AB8EA123456</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Framework7 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/framework7/framework7-bundle.min.js"></script>
+  <script>
+    var app = new Framework7({
+      root: '#app',
+      theme: 'ios',
+      init: false
+    });
+    
+    app.init();
+    
+    function showPanel(panelId) {
+      document.getElementById('mainMenu').style.display = 'none';
+      document.getElementById(panelId + '-panel').classList.add('active');
+    }
+    
+    function hidePanel() {
+      document.getElementById('mainMenu').style.display = 'flex';
+      const panels = document.querySelectorAll('.settings-panel');
+      panels.forEach(panel => {
+        panel.classList.remove('active');
+      });
+    }
+  </script>
+</body>
+</html>

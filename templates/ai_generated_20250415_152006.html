@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>音乐播放器</title>
+  <link rel="stylesheet" href="static/framework7-bundle.min.css">
+  <link rel="stylesheet" href="static/framework7-icons.min.css">
+  <style>
+    :root {
+      --f7-theme-color: #8e44ad;
+      --f7-theme-color-rgb: 142, 68, 173;
+      --f7-theme-color-shade: #7d3d99;
+      --f7-theme-color-tint: #9b4dbd;
+    }
+    body {
+      background-color: #121212;
+      color: #ffffff;
+      font-family: -apple-system, SF UI Text, Helvetica Neue, Helvetica, Arial, sans-serif;
+    }
+    .page-content {
+      padding-bottom: 80px;
+    }
+    .navbar {
+      background-color: #121212;
+    }
+    .music-header {
+      position: relative;
+      height: 300px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .music-header-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, rgba(142, 68, 173, 0.6), #121212);
+      z-index: 1;
+    }
+    .album-art {
+      width: 220px;
+      height: 220px;
+      border-radius: 10px;
+      box-shadow: 0 20px 30px rgba(0, 0, 0, 0.4);
+      z-index: 2;
+      transition: transform 0.3s ease;
+    }
+    .album-art:hover {
+      transform: scale(1.03);
+    }
+    .music-info {
+      text-align: center;
+      padding: 0 20px;
+      margin-bottom: 30px;
+    }
+    .song-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .artist-name {
+      font-size: 18px;
+      color: #b3b3b3;
+      margin-bottom: 15px;
+    }
+    .album-name {
+      font-size: 14px;
+      color: #b3b3b3;
+    }
+    .playback-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 30px 0;
+    }
+    .control-button {
+      background: none;
+      border: none;
+      color: #ffffff;
+      padding: 15px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .control-button:hover {
+      color: var(--f7-theme-color);
+    }
+    .control-button i {
+      font-size: 22px;
+    }
+    .play-button {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: var(--f7-theme-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 20px;
+      box-shadow: 0 6px 12px rgba(142, 68, 173, 0.3);
+      transition: all 0.2s;
+    }
+    .play-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 16px rgba(142, 68, 173, 0.4);
+    }
+    .play-button i {
+      font-size: 28px;
+      color: white;
+    }
+    .progress-container {
+      padding: 0 20px;
+      margin-bottom: 20px;
+    }
+    .progress-bar {
+      height: 5px;
+      background-color: #333333;
+      border-radius: 2.5px;
+      position: relative;
+      cursor: pointer;
+    }
+    .progress {
+      width: 35%;
+      height: 100%;
+      background-color: var(--f7-theme-color);
+      border-radius: 2.5px;
+      position: relative;
+    }
+    .progress-handle {
+      width: 14px;
+      height: 14px;
+      background-color: white;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      right: -7px;
+      transform: translateY(-50%);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    .time-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #b3b3b3;
+      margin-top: 10px;
+    }
+    .playlist-container {
+      margin-top: 40px;
+      padding: 0 15px;
+    }
+    .playlist-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding: 0 5px;
+    }
+    .playlist-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .playlist-actions {
+      display: flex;
+    }
+    .action-button {
+      padding: 8px;
+      color: #b3b3b3;
+      cursor: pointer;
+    }
+    .action-button:hover {
+      color: white;
+    }
+    .song-list {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    .song-item {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .song-item:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+    .song-item.active {
+      background-color: rgba(142, 68, 173, 0.15);
+    }
+    .song-number {
+      width: 24px;
+      text-align: center;
+      color: #b3b3b3;
+      margin-right: 15px;
+    }
+    .song-item.active .song-number {
+      color: var(--f7-theme-color);
+    }
+    .song-details {
+      flex: 1;
+    }
+    .song-item-title {
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+    .song-item.active .song-item-title {
+      color: var(--f7-theme-color);
+    }
+    .song-item-artist {
+      font-size: 13px;
+      color: #b3b3b3;
+    }
+    .song-duration {
+      color: #b3b3b3;
+      font-size: 14px;
+    }
+    .song-actions {
+      margin-left: 15px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .song-item:hover .song-actions {
+      opacity: 1;
+    }
+    .song-action-button {
+      padding: 5px;
+      color: #b3b3b3;
+      cursor: pointer;
+    }
+    .song-action-button:hover {
+      color: white;
+    }
+    .player-bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background-color: rgba(18, 18, 18, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      padding: 0 15px;
+      z-index: 1000;
+    }
+    .mini-album-art {
+      width: 50px;
+      height: 50px;
+      border-radius: 4px;
+      margin-right: 15px;
+    }
+    .mini-music-info {
+      flex: 1;
+    }
+    .mini-title {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .mini-artist {
+      font-size: 12px;
+      color: #b3b3b3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .mini-controls {
+      display: flex;
+      align-items: center;
+      margin-left: 15px;
+    }
+    .mini-control-button {
+      padding: 8px;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+    .mini-control-button i {
+      font-size: 20px;
+    }
+    .volume-control {
+      display: flex;
+      align-items: center;
+      margin-left: 15px;
+    }
+    .volume-icon {
+      color: #b3b3b3;
+      margin-right: 10px;
+    }
+    .volume-slider {
+      width: 80px;
+      height: 4px;
+      background-color: #333333;
+      border-radius: 2px;
+      position: relative;
+      cursor: pointer;
+    }
+    .volume-level {
+      width: 70%;
+      height: 100%;
+      background-color: #b3b3b3;
+      border-radius: 2px;
+    }
+    .segmented-control {
+      margin: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      display: flex;
+      overflow: hidden;
+    }
+    .segment {
+      flex: 1;
+      text-align: center;
+      padding: 12px;
+      cursor: pointer;
+      color: #b3b3b3;
+      transition: all 0.3s;
+    }
+    .segment.active {
+      background-color: var(--f7-theme-color);
+      color: white;
+    }
+    .segment:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+    .segment.active:hover {
+      background-color: var(--f7-theme-color-shade);
+    }
+    .additional-options {
+      display: flex;
+      justify-content: space-around;
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 20px;
+    }
+    .option-button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #b3b3b3;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .option-button:hover {
+      color: white;
+    }
+    .option-button i {
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+    .option-label {
+      font-size: 12px;
+    }
+    .lyrics-container {
+      padding: 20px;
+      text-align: center;
+      line-height: 1.8;
+      max-height: 300px;
+      overflow-y: auto;
+      margin: 20px 0;
+    }
+    .lyrics-line {
+      margin: 15px 0;
+      color: #b3b3b3;
+      transition: all 0.3s;
+    }
+    .lyrics-line.active {
+      color: var(--f7-theme-color);
+      font-size: 18px;
+      font-weight: 500;
+    }
+    @media (max-width: 768px) {
+      .music-header {
+        height: 240px;
+      }
+      .album-art {
+        width: 180px;
+        height: 180px;
+      }
+      .player-bottom-bar {
+        height: 60px;
+      }
+      .volume-control {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="view view-main">
+      <div class="page">
+        <div class="navbar">
+          <div class="navbar-bg"></div>
+          <div class="navbar-inner">
+            <div class="left">
+              <a href="#" class="link">
+                <i class="icon f7-icons" style="font-size: 22px;">chevron_left</i>
+              </a>
+            </div>
+            <div class="title">正在播放</div>
+            <div class="right">
+              <a href="#" class="link">
+                <i class="icon f7-icons" style="font-size: 22px;">ellipsis_vertical</i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="page-content">
+          <!-- 音乐头部 -->
+          <div class="music-header">
+            <div class="music-header-bg"></div>
+            <img src="https://img.icons8.com/fluency/240/album.png" class="album-art" alt="专辑封面">
+          </div>
+
+          <!-- 音乐信息 -->
+          <div class="music-info">
+            <div class="song-title">星辰大海</div>
+            <div class="artist-name">黄霄云</div>
+            <div class="album-name">星辰大海 · 专辑</div>
+          </div>
+
+          <div class="segmented-control">
+            <div class="segment active">歌曲</div>
+            <div class="segment">歌词</div>
+            <div class="segment">相似推荐</div>
+          </div>
+
+          <!-- 附加选项 -->
+          <div class="additional-options">
+            <div class="option-button">
+              <i class="icon f7-icons">heart</i>
+              <span class="option-label">收藏</span>
+            </div>
+            <div class="option-button">
+              <i class="icon f7-icons">arrow_down_circle</i>
+              <span class="option-label">下载</span>
+            </div>
+            <div class="option-button">
+              <i class="icon f7-icons">comment</i>
+              <span class="option-label">评论</span>
+            </div>
+            <div class="option-button">
+              <i class="icon f7-icons">share</i>
+              <span class="option-label">分享</span>
+            </div>
+          </div>
+
+          <!-- 播放进度 -->
+          <div class="progress-container">
+            <div class="progress-bar">
+              <div class="progress">
+                <div class="progress-handle"></div>
+              </div>
+            </div>
+            <div class="time-info">
+              <div class="current-time">1:23</div>
+              <div class="total-time">3:45</div>
+            </div>
+          </div>
+
+          <!-- 播放控制 -->
+          <div class="playback-controls">
+            <button class="control-button">
+              <i class="icon f7-icons">shuffle</i>
+            </button>
+            <button class="control-button">
+              <i class="icon f7-icons">backward_fill</i>
+            </button>
+            <button class="play-button">
+              <i class="icon f7-icons">pause_fill</i>
+            </button>
+            <button class="control-button">
+              <i class="icon f7-icons">forward_fill</i>
+            </button>
+            <button class="control-button">
+              <i class="icon f7-icons">repeat</i>
+            </button>
+          </div>
+
+          <!-- 歌词部分 -->
+          <div class="lyrics-container" style="display: none;">
+            <div class="lyrics-line">向着那黑夜 奔跑</div>
+            <div class="lyrics-line">我们负赤往前跑</div>
+            <div class="lyrics-line">只为那心中不灭的执着</div>
+            <div class="lyrics-line active">向着那未来 奔跑</div>
+            <div class="lyrics-line">我们携手一起逃</div>
+            <div class="lyrics-line">只为那心中不变的选择</div>
+            <div class="lyrics-line">向着那星辰大海 向着那无边无际</div>
+            <div class="lyrics-line">向着那黑夜尽头那道光芒</div>
+            <div class="lyrics-line">向着那心底星辰 向着那无畏勇气</div>
+            <div class="lyrics-line">向着那心中的梦想在前方</div>
+            <div class="lyrics-line">向着那星辰大海 向着那无边无际</div>
+            <div class="lyrics-line">向着那黑夜尽头那道光芒</div>
+          </div>
+
+          <!-- 播放列表 -->
+          <div class="playlist-container">
+            <div class="playlist-header">
+              <div class="playlist-title">播放列表</div>
+              <div class="playlist-actions">
+                <div class="action-button">
+                  <i class="icon f7-icons">square_list</i>
+                </div>
+                <div class="action-button">
+                  <i class="icon f7-icons">plus</i>
+                </div>
+              </div>
+            </div>
+            <ul class="song-list">
+              <li class="song-item active">
+                <div class="song-number">1</div>
+                <div class="song-details">
+                  <div class="song-item-title">星辰大海</div>
+                  <div class="song-item-artist">黄霄云</div>
+                </div>
+                <div class="song-duration">3:45</div>
+                <div class="song-actions">
+                  <div class="song-action-button">
+                    <i class="icon f7-icons">heart</i>
+                  </div>
+                  <div class="song-action-button">
+                    <i class="icon f7-icons">ellipsis_vertical</i>
+                  </div>
+                </div>
+              </li>
+              <li class="song-item">
+                <div class="song-number">2</div>
+                <div class="song-details">
+                  <div class="song-item-title">起风了</div>
+                  <div class="song-item-artist">买辣椒也用券</div>
+                </div>
+                <div class="song-duration">4:32</div>
+                <div class="song-actions">
+                  <div class="song-action-button">
+                    <i class="icon f7-icons">heart</i>
+                  </div>
+                  <div class="song-action-button">
+                    <i class="icon f7-icons">ellipsis_vertical</i>
+                  </div>
+                </div>
+              </li>
+              <li class="song-item">
+                <div class="song-number">3</div>
+                <div class="song-details">
+                  <div class="song-item-title">Hurt</div>
+                  <div class="song-item-artist">Oliver Tree</div>
+                </div>
+                <div class="song-duration">3:05</div>
+                <div class="song-actions">
+                  <div class="song-action-button">
+                    <i class="icon f7-icons">heart</i>
+                  </div>
+                  <div class="song-action-button">
+                    <i class="icon f7-icons">ellipsis_vertical</i>
+                  </div>
+                </div>
+              </li>
+              <li class="song-item">
+                <div class="song-number">4</div>
+                <div class="song-details">
+                  <div class="song-item-title">爱的飞行日记</div>
+                  <div class="song-item-artist">王贰浪</div>
+                </div>
+                <div class="song-duration">4:03</div>
+                <div class="song-actions">
+                  <div class="song-action-button">
+                    <i class="icon f7-icons">heart</i>
+                  </div>
+                  <div class="song-action-button">
+                    <i class="icon f7-icons">ellipsis_vertical</i>
+                  </div>
+                </div>
+              </li>
+              <li class="song-item">
+                <div class="song-number">5</div>
+                <div class="song-details">
+                  <div class="song-item-title">唯一</div>
+                  <div class="song-item-artist">告五人</div>
+                </div>
+                <div class="song-duration">3:58</div>
+                <div class="song-actions">
+                  <div class="song-action-button">
+                    <i class="icon f7-icons">heart</i>
+                  </div>
+                  <div class="song-action-button">
+                    <i class="icon f7-icons">ellipsis_vertical</i>
+                  </div>
+                </div>
+              </li>
+              <li class="song-item">
+                <div class="song-number">6</div>
+                <div class="song-details">
+                  <div class="song-item-title">幸福里</div>
+                  <div class="song-item-artist">陈雪凝</div>
+                </div>
+                <div class="song-duration">3:29</div>
+                <div class="song-actions">
+                  <div class="song-action-button">
+                    <i class="icon f7-icons">heart</i>
+                  </div>
+                  <div class="song-action-button">
+                    <i class="icon f7-icons">ellipsis_vertical</i>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 底部播放栏 -->
+    <div class="player-bottom-bar">
+      <img src="https://img.icons8.com/fluency/50/album.png" class="mini-album-art" alt="专辑封面">
+      <div class="mini-music-info">
+        <div class="mini-title">星辰大海</div>
+        <div class="mini-artist">黄霄云</div>
+      </div>
+      <div class="mini-controls">
+        <button class="mini-control-button">
+          <i class="icon f7-icons">backward_fill</i>
+        </button>
+        <button class="mini-control-button">
+          <i class="icon f7-icons">pause_fill</i>
+        </button>
+        <button class="mini-control-button">
+          <i class="icon f7-icons">forward_fill</i>
+        </button>
+      </div>
+      <div class="volume-control">
+        <div class="volume-icon">
+          <i class="icon f7-icons">speaker_3_fill</i>
+        </div>
+        <div class="volume-slider">
+          <div class="volume-level"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="static/framework7-bundle.min.js"></script>
+  <script>
+    var app = new Framework7({
+      root: '#app',
+      theme: 'auto'
+    });
+
+    document.querySelectorAll('.segment').forEach(function(segment, index) {
+      segment.addEventListener('click', function() {
+        // 移除所有激活状态
+        document.querySelectorAll('.segment').forEach(function(s) {
+          s.classList.remove('active');
+        });
+        
+        // 添加当前激活状态
+        segment.classList.add('active');
+        
+        // 显示对应内容
+        if (index === 0) { // 歌曲
+          document.querySelector('.playlist-container').style.display = 'block';
+          document.querySelector('.lyrics-container').style.display = 'none';
+        } else if (index === 1) { // 歌词
+          document.querySelector('.playlist-container').style.display = 'none';
+          document.querySelector('.lyrics-container').style.display = 'block';
+        } else { // 相似推荐
+          document.querySelector('.playlist-container').style.display = 'block';
+          document.querySelector('.lyrics-container').style.display = 'none';
+        }
+      });
+    });
+
+    // 播放/暂停按钮切换
+    document.querySelector('.play-button').addEventListener('click', function() {
+      const icon = this.querySelector('i');
+      if (icon.classList.contains('pause_fill')) {
+        icon.classList.remove('pause_fill');
+        icon.classList.add('play_fill');
+      } else {
+        icon.classList.remove('play_fill');
+        icon.classList.add('pause_fill');
+      }
+    });
+
+    // 迷你播放器的播放/暂停按钮切换
+    document.querySelector('.mini-controls .mini-control-button:nth-child(2)').addEventListener('click', function() {
+      const icon = this.querySelector('i');
+      if (icon.classList.contains('pause_fill')) {
+        icon.classList.remove('pause_fill');
+        icon.classList.add('play_fill');
+      } else {
+        icon.classList.remove('play_fill');
+        icon.classList.add('pause_fill');
+      }
+    });
+  </script>
+</body>
+</html>
